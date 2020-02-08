@@ -47,3 +47,51 @@ class User {
         // Return user data 
         return $userData; 
     } 
+
+    public function getPosts($conditions = array()){ 
+        $sql = 'SELECT *'; 
+        $sql .= ' FROM '.$this->postTbl; 
+        if(array_key_exists("where",$conditions)){ 
+            $sql .= ' WHERE '; 
+            $i = 0; 
+            foreach($conditions['where'] as $key => $value){ 
+                $pre = ($i > 0)?' AND ':''; 
+                $sql .= $pre.$key." = '".$value."'"; 
+                $i++; 
+            } 
+        } 
+         
+        if(array_key_exists("order_by",$conditions)){ 
+            $sql .= ' ORDER BY '.$conditions['order_by'];  
+        }else{ 
+            $sql .= ' ORDER BY created_time DESC ';  
+        } 
+         
+        if(array_key_exists("start",$conditions) && array_key_exists("limit",$conditions)){ 
+            $sql .= ' LIMIT '.$conditions['start'].','.$conditions['limit'];  
+        }elseif(!array_key_exists("start",$conditions) && array_key_exists("limit",$conditions)){ 
+            $sql .= ' LIMIT '.$conditions['limit'];  
+        } 
+         
+        $result = $this->db->query($sql); 
+         
+        if(array_key_exists("return_type",$conditions) && $conditions['return_type'] != 'all'){ 
+            switch($conditions['return_type']){ 
+                case 'count': 
+                    $data = $result->num_rows; 
+                    break; 
+                case 'single': 
+                    $data = $result->fetch_assoc(); 
+                    break; 
+                default: 
+                    $data = ''; 
+            } 
+        }else{ 
+            if($result->num_rows > 0){ 
+                while($row = $result->fetch_assoc()){ 
+                    $data[] = $row; 
+                } 
+            } 
+        } 
+        return !empty($data)?$data:false; 
+    } 
