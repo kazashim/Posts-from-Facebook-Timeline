@@ -106,3 +106,81 @@ if(isset($accessToken)){
       
      // Get logout url 
      $logoutURL = $helper->getLogoutUrl($accessToken, FB_REDIRECT_URL.'logout.php'); 
+
+     // Render Facebook profile data 
+    if(!empty($userData)){ 
+        $output  = '<h2>Facebook Profile Details</h2>'; 
+        $output .= '<div class="ac-data">'; 
+        $output .= '<img src="'.$userData['picture'].'"/>'; 
+        $output .= '<p><b>Facebook ID:</b> '.$userData['oauth_uid'].'</p>'; 
+        $output .= '<p><b>Name:</b> '.$userData['first_name'].' '.$userData['last_name'].'</p>'; 
+        $output .= '<p><b>Email:</b> '.$userData['email'].'</p>'; 
+        $output .= '<p><b>Gender:</b> '.$userData['gender'].'</p>'; 
+        $output .= '<p><b>Logged in with:</b> Facebook'.'</p>'; 
+        $output .= '<p><b>Profile Link:</b> <a href="'.$userData['link'].'" target="_blank">Click to visit Facebook page</a></p>'; 
+        $output .= '<p><b>Logout from <a href="'.$logoutURL.'">Facebook</a></p>'; 
+        $output .= '</div>'; 
+    }else{ 
+        $output = '<h3 style="color:red">Some problem occurred, please try again.</h3>'; 
+    } 
+}else{ 
+    // Get login url 
+    $permissions = ['email']; // Optional permissions 
+    $loginURL = $helper->getLoginUrl(FB_REDIRECT_URL, $permissions); 
+     
+    // Render Facebook login button 
+    $output = '<a href="'.htmlspecialchars($loginURL).'"><img src="images/fb-login-btn.png"></a>'; 
+} 
+?>
+
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+<title>Login with Facebook using PHP </title>
+<meta charset="utf-8">
+<!-- stylesheet file -->
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="container">
+    <div class="fb-box">
+        <!-- Display login button / Facebook profile information -->
+        <?php echo $output; ?>
+    </div>
+	
+    <!-- List user posts -->
+    <?php
+    <?php 
+    if(!empty($userID)){ 
+        // Fetch posts from the database 
+        $con = array( 
+            'where' => array('user_id' => $userID), 
+            'limit' => FB_POST_LIMIT 
+        ); 
+        $posts = $user->getPosts($con); 
+         
+        if(!empty($posts)){ 
+    ?>
+        <div class="post-list">
+            <h2>Facebook Feeds</h2>
+            <?php foreach($posts as $row){ 
+                $image = !empty($row['attach_image'])?'<img src="'.$row['attach_image'].'"/>':''; 
+                $title = (strlen($row['attach_title'])>55)?substr($row['attach_title'],0,55):$row['attach_title']; 
+                $message = (strlen($row['message'])>120)?substr($row['message'],0,110).'...':$row['message']; 
+            ?>
+            <a href="<?php echo $row['attach_link']; ?>" target="_blank">
+            <div class="pbox">
+                <div class="img"><?php echo $image; ?></div>
+                <div class="cont">
+                    <h4><?php echo $title; ?></h4>
+                    <p><?php echo $message; ?></p>
+                </div>
+            </div>
+            </a>
+            <?php } ?>
+        </div>
+    <?php } 
+    } ?>
+</div>
+</body>
+</html>
