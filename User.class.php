@@ -96,4 +96,28 @@ class User {
         return !empty($data)?$data:false; 
     } 
 
-    
+    function insertPost($data){ 
+        if(!empty($data) && is_array($data)){ 
+            $columns = ''; 
+            $values  = ''; 
+            $i = 0; 
+            foreach($data as $key=>$val){ 
+                $pre = ($i > 0)?', ':''; 
+                $columns .= $pre.$key; 
+                $values  .= $pre."'".$this->db->real_escape_string($val)."'"; 
+                $i++; 
+            } 
+            $query = "INSERT INTO ".$this->postTbl." (".$columns.") VALUES (".$values.")"; 
+            $insert = $this->db->query($query); 
+            return $insert?$this->db->insert_id:false; 
+        }else{ 
+            return false; 
+        } 
+    } 
+     
+    public function deletePosts($userID){ 
+        $query = "DELETE FROM ".$this->postTbl." WHERE user_id = $userID"; 
+        $delete = $this->db->query($query); 
+        return $delete?true:false; 
+    } 
+}
