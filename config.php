@@ -23,7 +23,7 @@ if(!session_id()){
 } 
 
 // Include the autoloader provided in the SDK 
-require_once __DIR__ . '/facebook-php-graph-sdk/autoload.php'; 
+require_once __DIR__ . '/facebook-php-graph-sdk/src/autoload.php'; 
  
 // Include required libraries 
 use Facebook\Facebook; 
@@ -34,6 +34,6 @@ use Facebook\Exceptions\FacebookSDKException;
 $fb = new Facebook(array( 
     'app_id' => FB_APP_ID, 
     'app_secret' => FB_APP_SECRET, 
-    'default_graph_version' => 'v3.2', 
+    'default_graph_version' => 'v5.x', 
 )); 
  
