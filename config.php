@@ -23,7 +23,7 @@ if(!session_id()){
 } 
 
 // Include the autoloader provided in the SDK 
-require_once __DIR__ . '/facebook-php-graph-sdk/src/autoload.php'; 
+require_once __DIR__ . '/facebook-php-graph-sdk/src/Facebook/autoload.php'; 
  
 // Include required libraries 
 use Facebook\Facebook; 
