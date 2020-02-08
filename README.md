@@ -42,4 +42,3 @@ require_once __DIR__ . '/facebook-php-graph-sdk/src/Facebook/autoload.php';
 use Facebook\Facebook; 
 use Facebook\Exceptions\FacebookResponseException; 
 use Facebook\Exceptions\FacebookSDKException; 
-```php
