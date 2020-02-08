@@ -150,7 +150,7 @@ if(isset($accessToken)){
 	
     <!-- List user posts -->
     <?php
-    <?php 
+   
     if(!empty($userID)){ 
         // Fetch posts from the database 
         $con = array( 
